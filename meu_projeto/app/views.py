@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CustomPasswordChangeForm  # Use o CustomUserCreationForm em vez de RegisterForm
 from .models import Item  # Certifique-se de ter um modelo Item criado
 from django.contrib import messages
-
 from .models import CustomUser
+from .forms import ItemForm
 
 
 def register_view(request):
@@ -23,27 +23,19 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST['username']  # O campo username contém o e-mail
+        username = request.POST['username']
         password = request.POST['password']
         
-        try:
-            # Verifique se o email existe no banco de dados
-            user = CustomUser.objects.get(email=email)
-        except CustomUser.DoesNotExist:
-            messages.error(request, 'E-mail não encontrado.')
-            return redirect('login')
-        
-        # Autentica com o username associado ao email e a senha
-        user = authenticate(request, username=user.username, password=password)
+        user = authenticate(request, username=username, password=password)
         
         if user is not None:
             login(request, user)
             return redirect('items')  # Redireciona para a página de items
         else:
             messages.error(request, 'Credenciais inválidas.')
-            return redirect('login')
-    else:
-        return render(request, 'login.html')
+    
+    return render(request, 'login.html')
+
 
 
 @login_required
@@ -68,3 +60,16 @@ def change_password_view(request):
 def item_list_view(request):
     items = Item.objects.all()  # Certifique-se de que Item esteja corretamente modelado
     return render(request, 'items.html', {'items': items})
+
+
+def cadastrar_item(request):
+    if request.method == 'POST':
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Item cadastrado com sucesso!')
+            return redirect('listar_itens')  # Redireciona para a lista de itens, ou outro local de sua escolha
+    else:
+        form = ItemForm()
+
+    return render(request, 'cadastrar_item.html', {'form': form})

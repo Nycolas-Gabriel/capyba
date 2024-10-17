@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django import forms
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from .models import CustomUser  # Certifique-se de importar CustomUser
+from .models import Item
+
 
 # Custom User Creation Form
 class CustomUserCreationForm(UserCreationForm):
@@ -21,6 +21,7 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+
 # Custom Password Change Form
 class CustomPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input'}))
@@ -30,3 +31,9 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['old_password', 'new_password1', 'new_password2']
+
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ['nome', 'descricao']
