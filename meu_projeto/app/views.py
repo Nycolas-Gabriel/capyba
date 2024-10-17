@@ -6,6 +6,8 @@ from .forms import CustomUserCreationForm, CustomPasswordChangeForm  # Use o Cus
 from .models import Item  # Certifique-se de ter um modelo Item criado
 from django.contrib import messages
 
+from .models import CustomUser
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -21,14 +23,27 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        email = request.POST['username']  # O campo username contém o e-mail
+        password = request.POST['password']
+        
+        try:
+            # Verifique se o email existe no banco de dados
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'E-mail não encontrado.')
+            return redirect('login')
+        
+        # Autentica com o username associado ao email e a senha
+        user = authenticate(request, username=user.username, password=password)
+        
+        if user is not None:
             login(request, user)
-            return redirect('profile')
+            return redirect('items')  # Redireciona para a página de items
+        else:
+            messages.error(request, 'Credenciais inválidas.')
+            return redirect('login')
     else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        return render(request, 'login.html')
 
 
 @login_required

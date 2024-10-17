@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 
 {% block title %}Login{% endblock %}
 
@@ -9,7 +9,7 @@
         <div class="field">
             <label class="label">E-mail</label>
             <div class="control">
-                <input class="input" type="email" name="email" required>
+                <input class="input" type="email" name="username" required>  <!-- Envia como 'username' -->
             </div>
         </div>
 
@@ -26,4 +26,12 @@
     </form>
 
     <p><a href="{% url 'change_password' %}">Esqueci minha senha</a></p>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>  <!-- Exibe mensagens de erro ou sucesso -->
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
