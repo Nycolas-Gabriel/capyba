@@ -9,13 +9,22 @@
 <body>
 
     <nav class="navbar is-primary">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="/">Meu Site</a>
-        </div>
+      
         <div class="navbar-menu">
             <div class="navbar-end">
+                {% if user.is_authenticated %}
+                
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="button is-light">Logout</button>
+                </form>
+                {% else %}
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="/">Meu Site</a>
+                </div>
                 <a class="navbar-item" href="{% url 'register' %}">Cadastro</a>
                 <a class="navbar-item" href="{% url 'login' %}">Login</a>
+                {% endif %}
             </div>
         </div>
     </nav>

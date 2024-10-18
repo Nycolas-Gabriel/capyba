@@ -1,17 +1,19 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from .models import CustomUser  # Certifique-se de importar CustomUser
+from .models import CustomUser  
 from .models import Item
+from django.contrib.auth.views import LogoutView
+from django.urls import reverse_lazy
 
 
-# Custom User Creation Form
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     profile_image = forms.ImageField(required=False)
 
     class Meta:
-        model = CustomUser  # Altere para usar CustomUser
+        model = CustomUser  
         fields = ('username', 'email', 'password1', 'password2', 'profile_image')
 
     def save(self, commit=True):
@@ -22,7 +24,7 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
-# Custom Password Change Form
+
 class CustomPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input'}))
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input'}))
@@ -37,3 +39,6 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['nome', 'descricao']
+        
+class CustomLogoutView(LogoutView):
+    next_page = reverse_lazy('login')

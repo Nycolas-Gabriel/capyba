@@ -1,7 +1,13 @@
 {% extends 'base.html' %} 
 
 {% block title %}Login{% endblock %}
-
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 {% block content %}
     <h1 class="title">Login</h1>
     <form method="POST">

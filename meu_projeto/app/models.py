@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True)  # Campo de email único e obrigatório
+    email = models.EmailField(unique=True) 
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
     groups = models.ManyToManyField(
@@ -19,8 +19,8 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.'
     )
 
-    USERNAME_FIELD = 'email'  # Configura o e-mail como o campo de login
-    REQUIRED_FIELDS = ['username']  # O username continua sendo um campo requerido
+    USERNAME_FIELD = 'email' 
+    REQUIRED_FIELDS = ['username']  
 
 
 class Item(models.Model):
