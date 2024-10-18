@@ -9,16 +9,18 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LogoutView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
+from .models import Item
 
 def register_view(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES) 
+        form = CustomUserCreationForm(request.POST, request.FILES)  # Mantém os dados do formulário
         if form.is_valid():
-            user = form.save()  
-            messages.success(request, 'Cadastro realizado com sucesso!')  
-            return redirect('login')  
-        form = CustomUserCreationForm() 
+            user = form.save()
+            messages.success(request, 'Cadastro realizado com sucesso!')
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()  # Inicializa o formulário vazio em um GET
+
     return render(request, 'register.html', {'form': form})
 
 
